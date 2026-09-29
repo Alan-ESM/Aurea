@@ -1,0 +1,343 @@
+﻿<Window x:Name="Aurea" x:Class="Aurea.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Aurea - Traitement de Texte Intelligent" 
+        Height="900" Width="1400"
+        WindowState="Maximized"
+        Background="#1E1E2E" 
+        Icon="/Aurea.jpg">
+
+    <Window.Resources>
+        <!-- Style pour les menus -->
+        <Style x:Key="ModernMenuItem" TargetType="MenuItem">
+            <Setter Property="Background" Value="#16161E"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#2D2D44"/>
+                    <Setter Property="Foreground" Value="#00FFCC"/>
+                </Trigger>
+                <Trigger Property="IsSubmenuOpen" Value="True">
+                    <Setter Property="Background" Value="#2D2D44"/>
+                    <Setter Property="Foreground" Value="#00FFCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style pour boutons normaux -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#2D2D44"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D3D5C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style pour boutons plus petits -->
+        <Style x:Key="SmallModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#2D2D44"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D3D5C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="64*"/>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="549*"/>
+            <ColumnDefinition Width="295*"/>
+            <ColumnDefinition Width="460*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Barre supérieure -->
+        <Border Grid.Row="0" Background="#16161E" Grid.ColumnSpan="5" Margin="0,0,0,38" Grid.RowSpan="2">
+            <DockPanel Margin="10,5">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Text="✨ AUREA" 
+                              FontSize="20" 
+                              FontWeight="Bold"
+                              Foreground="#00FFCC"
+                              VerticalAlignment="Center"
+                              Margin="10,0"/>
+                </StackPanel>
+
+                <!-- Menu principal -->
+                <Menu Background="#16161E"
+                      DockPanel.Dock="Left"
+                      VerticalAlignment="Center"
+                      Margin="20,0,0,0">
+
+                    <MenuItem Header="Fichier" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Nouveau" Click="NewDocument_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Ouvrir..." Click="OpenDocument_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Enregistrer" Click="SaveDocument_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Enregistrer sous..." Click="SaveAs_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Importer PDF" Click="ImportPDF_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Exporter PDF" Click="ExportPDF_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Imprimer" Click="Print_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Quitter" Click="Exit_Click" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Édition" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Annuler" InputGestureText="Ctrl+Z" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Rétablir" InputGestureText="Ctrl+Y" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Couper" InputGestureText="Ctrl+X" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Copier" InputGestureText="Ctrl+C" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Coller" InputGestureText="Ctrl+V" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Sélectionner tout" InputGestureText="Ctrl+A" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Rechercher..." InputGestureText="Ctrl+F" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Format" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Police..." Click="FontSettings_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Paragraphe..." Click="ParagraphSettings_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <Separator Background="#2D2D44"/>
+                        <MenuItem Header="Styles" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Table des matières" Click="GenerateTOC_Click" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Insertion" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Tableau" Click="InsertTable_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Image" Click="InsertImage_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Lien hypertexte" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Saut de page" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Collaboration" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Ajouter collaborateur" Click="AddCollaborator_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Gérer les collaborateurs" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Historique des modifications" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="Affichage" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Mode Clair/Sombre" Click="ToggleTheme_Click" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="Zoom" Style="{StaticResource ModernMenuItem}">
+                            <MenuItem Header="50%" Style="{StaticResource ModernMenuItem}"/>
+                            <MenuItem Header="75%" Style="{StaticResource ModernMenuItem}"/>
+                            <MenuItem Header="100%" Style="{StaticResource ModernMenuItem}"/>
+                            <MenuItem Header="125%" Style="{StaticResource ModernMenuItem}"/>
+                            <MenuItem Header="150%" Style="{StaticResource ModernMenuItem}"/>
+                        </MenuItem>
+                    </MenuItem>
+
+                    <MenuItem Header="Aide" Style="{StaticResource ModernMenuItem}">
+                        <MenuItem Header="Documentation" Style="{StaticResource ModernMenuItem}"/>
+                        <MenuItem Header="À propos d'Aurea" Style="{StaticResource ModernMenuItem}"/>
+                    </MenuItem>
+                </Menu>
+
+                <!-- Boutons d'action rapide (plus petits) -->
+                <StackPanel Orientation="Horizontal" 
+                           DockPanel.Dock="Right"
+                           HorizontalAlignment="Right">
+                    <Button Content="🤖 IA" 
+                           Style="{StaticResource SmallModernButton}"
+                           Click="OpenAI_Click"
+                           Background="#6C3FB5"
+                           Width="70"
+                           ToolTip="Ouvrir l'assistant IA"/>
+                    <Button Content="📹" 
+                           Style="{StaticResource SmallModernButton}"
+                           Click="ToggleCamera_Click"
+                           Background="#2563EB"
+                           Width="70"
+                           ToolTip="Ouvrir la caméra"/>
+                    <Button Content="🎤" 
+                           Style="{StaticResource SmallModernButton}"
+                           Click="ToggleVoice_Click"
+                           Background="#10B981"
+                           Width="70"
+                           ToolTip="Activer la saisie vocale"/>
+                    <Button Content="🔊 Test" 
+                           Style="{StaticResource SmallModernButton}"
+                           Click="TestVoiceRecognition_Click"
+                           Background="#F59E0B"
+                           Width="60"
+                           ToolTip="Tester la reconnaissance vocale"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Barre d'outils -->
+        <Border Grid.Row="1" Background="#252534" Grid.ColumnSpan="5" Margin="0,0,0,780" Grid.RowSpan="2">
+            <StackPanel Orientation="Horizontal" Margin="10,8">
+                <ComboBox x:Name="FontFamilyCombo" 
+                         Width="150" 
+                         Margin="5,0"
+                         SelectionChanged="FontFamily_Changed"/>
+
+                <ComboBox x:Name="FontSizeCombo" 
+                         Width="60" 
+                         Margin="5,0"
+                         SelectionChanged="FontSize_Changed"/>
+
+                <Separator Margin="10,0"/>
+
+                <ToggleButton Width="30" Click="Bold_Click">
+                    <TextBlock Text="B" FontWeight="Bold"/>
+                </ToggleButton>
+
+                <ToggleButton Width="30" Click="Italic_Click">
+                    <TextBlock Text="I" FontStyle="Italic"/>
+                </ToggleButton>
+
+                <ToggleButton Width="30" Click="Underline_Click">
+                    <TextBlock Text="U" TextDecorations="Underline"/>
+                </ToggleButton>
+
+                <Separator Margin="10,0"/>
+
+                <Button Content="⬅" ToolTip="Aligner à gauche" Width="30" Click="AlignLeft_Click"/>
+                <Button Content="⬛" ToolTip="Centrer" Width="30" Click="AlignCenter_Click"/>
+                <Button Content="➡" ToolTip="Aligner à droite" Width="30" Click="AlignRight_Click"/>
+                <Button Content="⬌" ToolTip="Justifier" Width="30" Click="AlignJustify_Click"/>
+
+                <Separator Margin="10,0"/>
+
+                <Button Content="🎨" ToolTip="Couleur du texte" Width="30" Click="TextColor_Click"/>
+                <Button Content="🖌" ToolTip="Surbrillance" Width="30" Click="Highlight_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Zone principale -->
+        <Grid Grid.Row="2" Grid.ColumnSpan="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Éditeur de texte -->
+            <Border Grid.Column="0" 
+                   Background="#2A2A3E" 
+                   Margin="10"
+                   CornerRadius="8">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <RichTextBox x:Name="DocumentEditor"
+                                Background="Transparent"
+                                Foreground="White"
+                                FontSize="14"
+                                BorderThickness="0"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                SpellCheck.IsEnabled="True"
+                                Language="fr-FR">
+                        <RichTextBox.Padding>
+                            <Thickness>50,30,50,30</Thickness>
+                        </RichTextBox.Padding>
+                    </RichTextBox>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Panneau latéral -->
+            <Border x:Name="SidePanel"
+                   Grid.Column="1"
+                   Width="0"
+                   Background="#1A1A28"
+                   Margin="0,10,10,10"
+                   CornerRadius="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" 
+                           Background="#252534" 
+                           CornerRadius="8,8,0,0">
+                        <TextBlock x:Name="SidePanelTitle"
+                                  Text="Assistant IA"
+                                  FontSize="16"
+                                  FontWeight="Bold"
+                                  Foreground="White"
+                                  Margin="15,10"/>
+                    </Border>
+
+                    <Grid x:Name="SidePanelContent" Grid.Row="1"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Barre de statut -->
+        <Border Grid.Row="2" Background="#16161E" Grid.ColumnSpan="5" Margin="0,780,0,0">
+            <DockPanel Margin="10,5">
+                <TextBlock x:Name="StatusText" 
+                          Text="Prêt" 
+                          Foreground="#00FFCC"
+                          DockPanel.Dock="Left"
+                          FontWeight="SemiBold"/>
+
+                <StackPanel Orientation="Horizontal" 
+                           DockPanel.Dock="Right"
+                           HorizontalAlignment="Right">
+                    <CheckBox x:Name="VoiceInputCheckbox"
+                             Content="🎤 Saisie vocale"
+                             Foreground="White"
+                             Margin="0,0,20,0"
+                             Checked="VoiceInput_Checked"
+                             Unchecked="VoiceInput_Unchecked"/>
+
+                    <TextBlock Text="Ligne 1, Col 1" 
+                              Foreground="#888"
+                              Margin="0,0,20,0"/>
+                    <TextBlock x:Name="WordCount" 
+                              Text="0 mots" 
+                              Foreground="#888"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

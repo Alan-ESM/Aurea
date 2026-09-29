@@ -1,0 +1,80 @@
+﻿<Window x:Class="Aurea.Views.CollaboratorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ajouter un collaborateur" 
+        Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        Background="#2A2A3E"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Nom :" 
+                  Foreground="White" 
+                  Grid.Row="0"
+                  Margin="0,0,0,5"/>
+        <TextBox x:Name="NameTextBox" 
+                Grid.Row="1" 
+                Height="32"
+                Background="#3D3D5C"
+                Foreground="White"
+                Padding="8"
+                Margin="0,0,0,15"/>
+
+        <TextBlock Text="Email :" 
+                  Foreground="White" 
+                  Grid.Row="2"
+                  Margin="0,0,0,5"/>
+        <TextBox x:Name="EmailTextBox" 
+                Grid.Row="3" 
+                Height="32"
+                Background="#3D3D5C"
+                Foreground="White"
+                Padding="8"
+                Margin="0,0,0,15"/>
+
+        <TextBlock Text="Rôle :" 
+                  Foreground="White" 
+                  Grid.Row="4"
+                  Margin="0,0,0,5"/>
+        <ComboBox x:Name="RoleComboBox" 
+                 Grid.Row="5" 
+                 Height="32"
+                 Background="#3D3D5C"
+                 Foreground="White"
+                 Padding="8"
+                 Margin="0,0,0,15">
+            <ComboBoxItem Content="Éditeur" IsSelected="True"/>
+            <ComboBoxItem Content="Lecteur"/>
+            <ComboBoxItem Content="Commentateur"/>
+        </ComboBox>
+
+        <StackPanel Grid.Row="7" 
+                   Orientation="Horizontal" 
+                   HorizontalAlignment="Right"
+                   Margin="0,20,0,0">
+            <Button Content="Ajouter" 
+                   Width="90" 
+                   Height="34"
+                   Margin="0,0,10,0"
+                   Background="#6C3FB5"
+                   Foreground="White"
+                   Click="OK_Click"/>
+            <Button Content="Annuler" 
+                   Width="90" 
+                   Height="34"
+                   Background="#555"
+                   Foreground="White"
+                   Click="Cancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

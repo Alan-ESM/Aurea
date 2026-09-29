@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Aurea.Views.AIAssistantPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#1E1E2E">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer x:Name="ChatScrollViewer" Grid.Row="0" 
+                      VerticalScrollBarVisibility="Auto" Padding="10">
+            <ItemsControl x:Name="ChatHistory">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Background="#25253A" Padding="12" 
+                BorderThickness="0,1,0,0" BorderBrush="#333348">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="InputBox" Grid.Column="0"
+                         Background="#2D2D44" Foreground="White"
+                         BorderBrush="#555577" BorderThickness="1"
+                         Padding="14" FontSize="14.5"
+                         AcceptsReturn="True" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         KeyDown="InputBox_KeyDown"/>
+
+                <Button Grid.Column="1" Content="Microphone" FontSize="26" 
+                        Width="52" Height="52" Margin="10,0"
+                        Background="#3D3D5C" Foreground="White"
+                        Click="VoiceInput_Click"/>
+
+                <Button Grid.Column="2" Content="Envoyer" 
+                        Width="110" Height="52" Margin="6,0,0,0"
+                        Background="#6C3FB5" Foreground="White"
+                        FontWeight="SemiBold" FontSize="14"
+                        Click="Send_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
