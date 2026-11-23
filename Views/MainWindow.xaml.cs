@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -19,7 +19,7 @@ namespace Aurea.Views
     public partial class MainWindow : Window
     {
         private AIService aiService;
-        private CameraService cameraService;
+        private CameraPanel cameraPanel;
         private VoiceService voiceService;
         private DatabaseService databaseService;
         private DocumentService documentService;
@@ -41,7 +41,6 @@ namespace Aurea.Views
             try
             {
                 aiService = new AIService();
-                cameraService = new CameraService();
                 voiceService = new VoiceService();
                 databaseService = new DatabaseService();
                 documentService = new DocumentService();
@@ -90,6 +89,9 @@ namespace Aurea.Views
 
         private void OpenDocument_Click(object sender, RoutedEventArgs e)
         {
+            if (isModified && !ConfirmSave())
+                return;
+
             OpenFileDialog dialog = new OpenFileDialog
             {
                 Filter = "Tous les documents|*.docx;*.txt;*.rtf;*.pdf|" +
@@ -124,7 +126,7 @@ namespace Aurea.Views
         {
             if (string.IsNullOrEmpty(currentFilePath))
             {
-                SaveAs_Click(sender, e);
+                SaveAs();
             }
             else
             {
@@ -134,6 +136,11 @@ namespace Aurea.Views
 
         private void SaveAs_Click(object sender, RoutedEventArgs e)
         {
+            SaveAs();
+        }
+
+        private bool SaveAs()
+        {
             SaveFileDialog dialog = new SaveFileDialog
             {
                 Filter = "Word (*.docx)|*.docx|" +
@@ -142,14 +149,20 @@ namespace Aurea.Views
                         "PDF (*.pdf)|*.pdf"
             };
 
-            if (dialog.ShowDialog() == true)
-            {
-                currentFilePath = dialog.FileName;
-                SaveDocument();
-            }
+            if (dialog.ShowDialog() != true)
+                return false;
+
+            string previousFilePath = currentFilePath;
+            currentFilePath = dialog.FileName;
+            if (SaveDocument())
+                return true;
+
+            currentFilePath = previousFilePath;
+            UpdateTitle();
+            return false;
         }
 
-        private void SaveDocument()
+        private bool SaveDocument()
         {
             try
             {
@@ -161,11 +174,13 @@ namespace Aurea.Views
                 isModified = false;
                 UpdateTitle();
                 StatusText.Text = $"Document sauvegardé : {Path.GetFileName(currentFilePath)}";
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erreur lors de la sauvegarde : {ex.Message}",
                               "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
         }
 
@@ -264,6 +279,7 @@ namespace Aurea.Views
         // === ÉVÉNEMENTS PANNEAUX LATÉRAUX ===
         private async void OpenAI_Click(object sender, RoutedEventArgs e)
         {
+            StopCameraPanel();
             AnimateSidePanel(400);
             SidePanelTitle.Text = "🤖 Assistant IA";
 
@@ -281,22 +297,30 @@ namespace Aurea.Views
 
         private void ToggleCamera_Click(object sender, RoutedEventArgs e)
         {
-            if (SidePanel.Width == 0 || SidePanelTitle.Text != "📹 Caméra")
+            if (cameraPanel == null)
             {
                 AnimateSidePanel(400);
                 SidePanelTitle.Text = "📹 Caméra & Gestes";
 
-                var cameraPanel = new CameraPanel();
+                cameraPanel = new CameraPanel();
                 SidePanelContent.Children.Clear();
                 SidePanelContent.Children.Add(cameraPanel);
-
-                cameraService.StartCamera();
             }
             else
             {
-                cameraService.StopCamera();
+                StopCameraPanel();
                 AnimateSidePanel(0);
             }
+        }
+
+        private void StopCameraPanel()
+        {
+            if (cameraPanel == null)
+                return;
+
+            cameraPanel.StopCamera();
+            cameraPanel = null;
+            SidePanelContent.Children.Clear();
         }
 
         private void ToggleVoice_Click(object sender, RoutedEventArgs e)
@@ -487,6 +511,9 @@ namespace Aurea.Views
 
         private void ImportPDF_Click(object sender, RoutedEventArgs e)
         {
+            if (isModified && !ConfirmSave())
+                return;
+
             OpenFileDialog dialog = new OpenFileDialog
             {
                 Filter = "PDF (*.pdf)|*.pdf"
@@ -610,8 +637,9 @@ namespace Aurea.Views
 
             if (result == MessageBoxResult.Yes)
             {
-                SaveDocument_Click(null, null);
-                return true;
+                return string.IsNullOrEmpty(currentFilePath)
+                    ? SaveAs()
+                    : SaveDocument();
             }
             return result != MessageBoxResult.Cancel;
         }
@@ -644,7 +672,7 @@ namespace Aurea.Views
                 return;
             }
 
-            cameraService?.Dispose();
+            StopCameraPanel();
             voiceService?.Dispose();
             base.OnClosing(e);
         }
