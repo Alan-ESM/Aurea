@@ -52,6 +52,7 @@ namespace Aurea.Views
             }
             catch (Exception ex)
             {
+                documentService ??= new DocumentService();
                 MessageBox.Show($"Erreur lors de l'initialisation : {ex.Message}",
                               "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -94,11 +95,13 @@ namespace Aurea.Views
 
             OpenFileDialog dialog = new OpenFileDialog
             {
-                Filter = "Tous les documents|*.docx;*.txt;*.rtf;*.pdf|" +
+                Filter = "Tous les documents|*.docx;*.txt;*.rtf;*.pdf;*.md;*.html;*.htm|" +
                         "Word (*.docx)|*.docx|" +
                         "Texte (*.txt)|*.txt|" +
                         "RTF (*.rtf)|*.rtf|" +
-                        "PDF (*.pdf)|*.pdf"
+                        "PDF (*.pdf)|*.pdf|" +
+                        "Markdown (*.md)|*.md|" +
+                        "HTML (*.html;*.htm)|*.html;*.htm"
             };
 
             if (dialog.ShowDialog() == true)
@@ -146,7 +149,9 @@ namespace Aurea.Views
                 Filter = "Word (*.docx)|*.docx|" +
                         "Texte (*.txt)|*.txt|" +
                         "RTF (*.rtf)|*.rtf|" +
-                        "PDF (*.pdf)|*.pdf"
+                        "PDF (*.pdf)|*.pdf|" +
+                        "Markdown (*.md)|*.md|" +
+                        "HTML (*.html)|*.html"
             };
 
             if (dialog.ShowDialog() != true)
@@ -543,8 +548,16 @@ namespace Aurea.Views
 
             if (dialog.ShowDialog() == true)
             {
-                documentService.ExportToPDF(DocumentEditor, dialog.FileName);
-                StatusText.Text = "Document exporté en PDF";
+                try
+                {
+                    documentService.ExportToPDF(DocumentEditor, dialog.FileName);
+                    StatusText.Text = "Document exporté en PDF";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Erreur lors de l’export PDF : {ex.Message}", "Export impossible",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

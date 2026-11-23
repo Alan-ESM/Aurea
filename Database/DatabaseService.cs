@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SQLite;
 using System.IO;
 using System.Security.Cryptography;
@@ -24,10 +24,7 @@ namespace Aurea.Database
                 "Aurea");
             cacheDirectory = Path.Combine(appDataPath, "Cache");
 
-            if (!Directory.Exists(cacheDirectory))
-            {
-                Directory.CreateDirectory(cacheDirectory);
-            }
+            Directory.CreateDirectory(cacheDirectory);
 
             // Créer la base de données
             string dbPath = Path.Combine(appDataPath, "aurea.db");
@@ -36,8 +33,10 @@ namespace Aurea.Database
             if (!File.Exists(dbPath))
             {
                 SQLiteConnection.CreateFile(dbPath);
-                CreateTables();
             }
+
+            // Garantir le schéma même si le fichier de base existe déjà.
+            CreateTables();
         }
 
         private void CreateTables()
@@ -146,9 +145,13 @@ namespace Aurea.Database
                         // Créer une copie dans le cache
                         string cachePath = Path.Combine(
                             cacheDirectory,
-                            $"{Path.GetFileNameWithoutExtension(fileName)}_{now:yyyyMMddHHmmss}{Path.GetExtension(fileName)}"
+                            $"{Path.GetFileNameWithoutExtension(fileName)}_{now:yyyyMMddHHmmssfff}_{contentHash[..8]}{Path.GetExtension(fileName)}"
                         );
 
+                        if (File.Exists(cachePath))
+                        {
+                            File.SetAttributes(cachePath, FileAttributes.Normal);
+                        }
                         File.Copy(filePath, cachePath, true);
 
                         // Protéger le fichier (lecture seule)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -366,9 +366,10 @@ namespace Aurea.Services
                     {
                         if (inline is WpfRun run)
                         {
-                            string text = run.Text;
+                            string text = System.Net.WebUtility.HtmlEncode(run.Text);
                             if (run.FontWeight == FontWeights.Bold) text = $"<strong>{text}</strong>";
                             if (run.FontStyle == FontStyles.Italic) text = $"<em>{text}</em>";
+                            if (run.TextDecorations == TextDecorations.Underline) text = $"<u>{text}</u>";
                             html += text;
                         }
                     }

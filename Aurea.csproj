@@ -1,13 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-	<UseWindowsForms>false</UseWindowsForms>
-	<UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\aurea.ico" />
     <Resource Include="Aurea.jpg" />
     <Resource Include="Views\Aurea.jpg" />
   </ItemGroup>
